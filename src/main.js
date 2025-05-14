@@ -25,4 +25,13 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // to get great pe
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 //render
-renderer.render(scene, camera);
+
+
+function animate(){
+    requestAnimationFrame(animate);
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.01;
+    mesh.rotation.z += 0.01;
+    renderer.render(scene, camera);
+}
+animate();
