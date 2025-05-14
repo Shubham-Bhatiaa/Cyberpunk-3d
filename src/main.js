@@ -1,6 +1,7 @@
 import './style.css'
 
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 //scene
 const scene = new THREE.Scene();
@@ -24,14 +25,14 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // to get great performance on high pixel ratio displays without sacrificing resources
 renderer.setSize(window.innerWidth, window.innerHeight);
 
+//controls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
 //render
-
-
 function animate(){
     requestAnimationFrame(animate);
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.01;
-    mesh.rotation.z += 0.01;
+    controls.update();
     renderer.render(scene, camera);
 }
 animate();
