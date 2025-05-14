@@ -2,20 +2,27 @@ import './style.css'
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 //scene
 const scene = new THREE.Scene();
 
 //camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.z = 5;
+camera.position.z = 4;
 
-//objects
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({color: "red"});
-const mesh = new THREE.Mesh(geometry, material);
-
-scene.add(mesh);
+//gltf model loader
+const loader = new GLTFLoader();
+loader.load(
+    '/DamagedHelmet.gltf',
+    function (gltf) {
+        scene.add(gltf.scene);
+    },
+    undefined,
+    function (error) {
+        console.error('An error occurred:', error);
+    }
+);
 
 //renderer
 const renderer = new THREE.WebGLRenderer({
@@ -27,7 +34,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 //controls
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
+controls.enableDamping = true;        //enable damping to smooth the camera movement
 
 //render
 function animate(){
