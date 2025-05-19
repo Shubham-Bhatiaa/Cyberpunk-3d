@@ -6,10 +6,10 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 // Postprocessing imports
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
-
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js';
 
 //scene
 const scene = new THREE.Scene();
@@ -18,6 +18,7 @@ const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector("#canvas"),
     antialias: true,
+    alpha: true,
 });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -25,11 +26,11 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 // Add HDRI environment
 const rgbeLoader = new RGBELoader();
 rgbeLoader.load(
-  "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/dikhololo_night_1k.hdr",
+  "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/pine_picnic_1k.hdr",
   function (texture) {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = texture;
-    scene.background = texture;
+    // scene.background = texture;
   }
 );
 
@@ -54,20 +55,14 @@ loader.load(
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;        //enable damping to smooth the camera movement
 
-// Postprocessing setup for a darker, moody effect
+// Postprocessing setup
 const composer = new EffectComposer(renderer);
 const renderPass = new RenderPass(scene, camera);
 composer.addPass(renderPass);
 
-// Add a subtle bloom for a moody effect
-const bloomPass = new UnrealBloomPass(
-    new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.5, // strength
-    0.8, // radius
-    0.1  // threshold
-);
-composer.addPass(bloomPass);
-
+const rgbShiftPass = new ShaderPass(RGBShiftShader);
+rgbShiftPass.uniforms['amount'].value = 0.0002; // Adjust for desired effect
+composer.addPass(rgbShiftPass);
 
 // Handle resizing
 window.addEventListener('resize', () => {
