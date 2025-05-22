@@ -27,7 +27,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 // Add HDRI environment
 const rgbeLoader = new RGBELoader();
 rgbeLoader.load(
-  "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/pine_picnic_1k.hdr",
+  "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/gym_entrance_1k.hdr",
   function (texture) {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = texture;
