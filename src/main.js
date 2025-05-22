@@ -78,8 +78,8 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('mousemove', (e) => {
     if(model){
-          const rotationX = (e.clientX / window.innerWidth - 0.5) * (Math.PI *0.5 );
-          const rotationY = (e.clientY / window.innerHeight - 0.5) * (Math.PI *0.5 );
+          const rotationX = (e.clientX / window.innerWidth - 0.5) * (Math.PI *0.225 );
+          const rotationY = (e.clientY / window.innerHeight - 0.5) * (Math.PI *0.225 );
           gsap.to(model.rotation, {
               y: rotationX,
               x: rotationY,
