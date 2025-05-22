@@ -12,6 +12,13 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js';
 
+// Locomotive Scroll import (assumes installed via npm/yarn)
+import LocomotiveScroll from 'locomotive-scroll';
+
+// Initialize Locomotive Scroll
+const scroll = new LocomotiveScroll({
+});
+
 //scene
 const scene = new THREE.Scene();
 
@@ -58,6 +65,7 @@ loader.load(
 //controls
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;        //enable damping to smooth the camera movement
+controls.enabled = false
 
 // Postprocessing setup
 const composer = new EffectComposer(renderer);
@@ -74,6 +82,8 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     composer.setSize(window.innerWidth, window.innerHeight);
+    // Update Locomotive Scroll on resize
+    scroll.update();
 });
 
 window.addEventListener('mousemove', (e) => {
@@ -94,12 +104,15 @@ window.addEventListener("resize", ()=>{
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     composer.setSize(window.innerWidth, window.innerHeight);
+    // Update Locomotive Scroll on resize
+    scroll.update();
 })
 
-//render
+// Optionally, update Locomotive Scroll on each animation frame for best smoothness
 function animate(){
     requestAnimationFrame(animate);
     controls.update();
     composer.render();
+    scroll.update();
 }
 animate();
