@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import gsap from "gsap";
 
 // Postprocessing imports
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -34,6 +35,8 @@ rgbeLoader.load(
   }
 );
 
+let model;
+
 //camera
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.z = 4;
@@ -43,7 +46,8 @@ const loader = new GLTFLoader();
 loader.load(
     '/DamagedHelmet.gltf',
     function (gltf) {
-        scene.add(gltf.scene);
+        model = gltf.scene;
+        scene.add(model);
     },
     undefined,
     function (error) {
@@ -71,6 +75,26 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     composer.setSize(window.innerWidth, window.innerHeight);
 });
+
+window.addEventListener('mousemove', (e) => {
+    if(model){
+          const rotationX = (e.clientX / window.innerWidth - 0.5) * (Math.PI *0.5 );
+          const rotationY = (e.clientY / window.innerHeight - 0.5) * (Math.PI *0.5 );
+          gsap.to(model.rotation, {
+              y: rotationX,
+              x: rotationY,
+              duration: 0.5,
+              ease: "power2.out"
+            });
+    }
+});
+
+window.addEventListener("resize", ()=>{
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
+})
 
 //render
 function animate(){
